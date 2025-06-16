@@ -382,7 +382,7 @@ function App() {
                           </div>
                         </div>
                         <div className="flex items-center space-x-2">
-                          {case_.status === 'submitted' && currentUser.role in ['registrar', 'supervisor'] && (
+                          {case_.status === 'submitted' && ['registrar', 'supervisor'].includes(currentUser.role) && (
                             <select
                               onChange={(e) => {
                                 if (e.target.value) {
