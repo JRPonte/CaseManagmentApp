@@ -257,7 +257,6 @@ async def update_case_workflow(case_id: str, workflow_action: WorkflowAction, cu
     # Update case based on action
     update_data = {
         "updated_at": datetime.utcnow(),
-        "$push": {"workflow_history": workflow_entry}
     }
     
     if workflow_action.action == "assign":
@@ -272,7 +271,9 @@ async def update_case_workflow(case_id: str, workflow_action: WorkflowAction, cu
     elif workflow_action.action == "request_documents":
         update_data["status"] = "pending_documents"
     
+    # Use two separate operations: one for the update and one for the push
     db.cases.update_one({"id": case_id}, {"$set": update_data})
+    db.cases.update_one({"id": case_id}, {"$push": {"workflow_history": workflow_entry}})
     
     return {"success": True, "message": f"Case {workflow_action.action} successfully"}
 
